@@ -208,7 +208,3 @@ Check out the examples directory for more detailed examples:
 - [Simple Workflow](examples/simple_workflow.py)
 - [Advanced Workflow](examples/advanced_workflow.py)
 - [Conditional Workflow](examples/conditional_workflow.py)
-
-## License
-
-MIT
