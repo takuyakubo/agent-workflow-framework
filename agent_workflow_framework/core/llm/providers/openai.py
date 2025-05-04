@@ -4,8 +4,8 @@ OpenAI model implementation.
 
 from langchain_openai import ChatOpenAI
 
-from core.llm.models import UnifiedModel
-from core.llm.utils import image_path_to_image_data
+from ..models import UnifiedModel
+from ..utils import image_path_to_image_data
 
 provider_name = "openai"
 

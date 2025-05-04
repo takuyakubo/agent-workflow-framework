@@ -4,6 +4,8 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+LMSTUDIO_HOST = os.getenv("LANGFUSE_HOST", "http://localhost:1234/v1/")
+
 LANGCHAIN_MAX_CONCURRENCY = int(os.getenv("LANGCHAIN_MAX_CONCURRENCY", 5))
 LANGFUSE_SECRET_KEY = os.getenv("LANGFUSE_SECRET_KEY", "")
 LANGFUSE_PUBLIC_KEY = os.getenv("LANGFUSE_PUBLIC_KEY", "")

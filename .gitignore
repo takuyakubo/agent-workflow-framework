@@ -34,3 +34,7 @@ htmlcov/
 # OS generated files
 .DS_Store
 Thumbs.db
+
+# jupyter files
+*.ipynb
+.ipynb_checkpoints/

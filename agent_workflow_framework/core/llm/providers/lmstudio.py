@@ -1,29 +1,41 @@
 """
-Google Gemini model implementation.
+OpenAI model implementation.
 """
-
-from langchain_google_genai import ChatGoogleGenerativeAI
+import httpx
+from langchain_openai import ChatOpenAI
 
 from ..models import UnifiedModel
 from ..utils import image_path_to_image_data
+from agent_workflow_framework.config import LMSTUDIO_HOST
 
-provider_name = "google"
+provider_name = "lmstudio"
 
+def get_available_models():
+    models_url = LMSTUDIO_HOST + 'models'
+    with httpx.Client() as client:
+        try:
+            response = client.get(models_url)
+            data = response.json()
+            return [d['id'] for d in data['data'] if d['object'] == 'model']
+        except:
+            return []
 
-class GoogleModel(ChatGoogleGenerativeAI, UnifiedModel):
+provided_models = get_available_models()
+
+class LMStudioModel(ChatOpenAI, UnifiedModel):
     """
-    Implementation of the unified model interface for Google Gemini models.
+    Implementation of the unified model interface for OpenAI models.
     """
 
     def __init__(self, model_name: str, **kwargs):
         """
-        Initialize the Google model.
+        Initialize the OpenAI model.
 
         Args:
-            model_name: Google Gemini model name
+            model_name: OpenAI model name
             **kwargs: Additional arguments for the model
         """
-        super(ChatGoogleGenerativeAI, self).__init__(model=model_name, **kwargs)
+        super(ChatOpenAI, self).__init__(model=model_name, base_url=LMSTUDIO_HOST, api_key="dummy", **kwargs)
         self._model_name = model_name
 
     @property
