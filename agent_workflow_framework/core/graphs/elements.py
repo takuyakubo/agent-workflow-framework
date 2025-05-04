@@ -3,8 +3,8 @@ from typing import Callable, Generic, Tuple, TypeVar
 
 from langgraph.graph import END
 
-from config import DEBUG_MODE
-from core.graphs.states import NodeState
+from ...config import DEBUG_MODE
+from .states import NodeState
 
 logger = logging.getLogger(__name__)
 

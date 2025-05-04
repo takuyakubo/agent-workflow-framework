@@ -1,8 +1,7 @@
 from typing import List
 
-from langgraph.graph import END, START, StateGraph
-
 from core.graphs.elements import LangGraphConditionalEdge, LangGraphNode
+from langgraph.graph import END, START, StateGraph
 
 
 class SequentialWorkflow:

@@ -4,11 +4,11 @@ from .anthropic import AnthropicModel
 from .anthropic import provider_name as apn
 from .google import GoogleModel
 from .google import provider_name as gpn
+from .lmstudio import LMStudioModel
+from .lmstudio import provided_models as lms_models
+from .lmstudio import provider_name as lms
 from .openai import OpenAIModel
 from .openai import provider_name as opn
-from .lmstudio import LMStudioModel
-from .lmstudio import provider_name as lms
-from .lmstudio import provided_models as lms_models
 
 """
 Provider-specific implementations of the unified model interface.
@@ -30,7 +30,7 @@ model_registory = {
     ProviderType.ANTHROPIC.value: AnthropicModel,
     ProviderType.OPENAI.value: OpenAIModel,
     ProviderType.GOOGLE.value: GoogleModel,
-    ProviderType.LMSTUDIO.value: LMStudioModel
+    ProviderType.LMSTUDIO.value: LMStudioModel,
 }
 
 

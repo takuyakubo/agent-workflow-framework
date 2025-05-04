@@ -21,7 +21,9 @@ class NodeState(BaseModel):
     """
 
     error: str = Field(default="", description="Error message (if any)")
-    context: Dict[str, str] = Field(default_factory=dict, description="Shared context between nodes")
+    context: Dict[str, str] = Field(
+        default_factory=dict, description="Shared context between nodes"
+    )
 
     def emit_error(self, error_str: str) -> "NodeState":
         """
@@ -35,7 +37,7 @@ class NodeState(BaseModel):
         """
         logger.error(f"Node error: {error_str}")
         return self.model_copy(update={"error": error_str})
-    
+
     def add_to_context(self, key: str, value: str) -> None:
         """
         Add a key-value pair to the context.
@@ -45,8 +47,10 @@ class NodeState(BaseModel):
             value: Context value
         """
         self.context[key] = value
-    
-    def get_from_context(self, key: str, default: Optional[str] = None) -> Optional[str]:
+
+    def get_from_context(
+        self, key: str, default: Optional[str] = None
+    ) -> Optional[str]:
         """
         Get a value from the context by key.
 
