@@ -1,37 +1,33 @@
 from enum import Enum
+from typing import Dict, Type
 
-from .anthropic import AnthropicModel
-from .anthropic import provider_name as apn
-from .google import GoogleModel
-from .google import provider_name as gpn
-from .lmstudio import LMStudioModel
-from .lmstudio import provided_models as lms_models
-from .lmstudio import provider_name as lms
-from .openai import OpenAIModel
-from .openai import provider_name as opn
+from ..models import UnifiedModel
+from . import anthropic, google, lmstudio, openai
+
+# プロバイダ情報を集約; get_providerが呼ばれた場合、この順序が優先されるので注意すること
+# e.g. gemma-3-12b-itが googleとlmstudioにある場合、先にあるlmstudio優先
+
+_providers = [
+    anthropic.get_provider_info(),
+    lmstudio.get_provider_info(),
+    google.get_provider_info(),
+    openai.get_provider_info(),
+]
 
 """
 Provider-specific implementations of the unified model interface.
 """
 
+# ProviderType Enumを作成
+ProviderType = Enum("ProviderType", {p["name"].upper(): p["name"] for p in _providers})
 
-class ProviderType(Enum):
-    """
-    Enumeration of supported LLM providers.
-    """
-
-    ANTHROPIC = apn
-    OPENAI = opn
-    GOOGLE = gpn
-    LMSTUDIO = lms
-
-
-model_registory = {
-    ProviderType.ANTHROPIC.value: AnthropicModel,
-    ProviderType.OPENAI.value: OpenAIModel,
-    ProviderType.GOOGLE.value: GoogleModel,
-    ProviderType.LMSTUDIO.value: LMStudioModel,
+# モデルレジストリを構築
+model_registry: Dict[str, Type[UnifiedModel]] = {
+    p["name"]: p["model_class"] for p in _providers
 }
+
+# ToDo: 毎回起動のたびにmodel listのAPIが呼ばれるのは良くないのでキャッシュ機構を検討すること。
+allowed_models = {p["name"]: p["custom_models"] for p in _providers}
 
 
 def get_provider(model_name: str) -> str:
@@ -47,13 +43,16 @@ def get_provider(model_name: str) -> str:
     Raises:
         ValueError: If the provider cannot be determined
     """
-    if model_name.startswith("claude-"):
-        return ProviderType.ANTHROPIC.value
-    elif model_name.startswith("gemini-"):
-        return ProviderType.GOOGLE.value
-    elif model_name.startswith("gpt-"):
-        return ProviderType.OPENAI.value
-    elif model_name in lms_models:
-        return ProviderType.LMSTUDIO.value
-    else:
-        raise ValueError(f"Cannot determine provider for model: {model_name}")
+    for p in _providers:
+        provider = p["name"]
+        # 接頭辞でチェック
+        prefix = p["model_prefix"]
+        if prefix is not None and model_name.startswith(prefix):
+            return provider
+        # カスタムモデルでチェック
+        custom_models = p["custom_models"]
+        if model_name in custom_models:
+            return provider
+
+    # 見つからない場合はエラー
+    raise ValueError(f"Cannot determine provider for model: {model_name}")

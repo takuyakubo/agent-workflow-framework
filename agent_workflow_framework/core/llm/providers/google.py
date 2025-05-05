@@ -2,12 +2,31 @@
 Google Gemini model implementation.
 """
 
+# langchain_google_genaiはgoogle-ai-generativelanguageを使っているが、移行が推奨されているためgoogle‑genai を使う
+from google import genai
 from langchain_google_genai import ChatGoogleGenerativeAI
 
 from ..models import UnifiedModel
 from ..utils import image_path_to_image_data
 
 provider_name = "google"
+model_prefix = "gemini-"
+
+
+def get_available_models():
+    client = genai.Client()
+    try:
+        data = client.models.list()
+        return [
+            d.name[len("models/") :]
+            for d in data
+            if "generateContent" in d.supported_actions
+        ]
+    except:
+        return []
+
+
+provided_models = get_available_models()
 
 
 class GoogleModel(ChatGoogleGenerativeAI, UnifiedModel):
@@ -47,3 +66,25 @@ class GoogleModel(ChatGoogleGenerativeAI, UnifiedModel):
             "type": "image_url",
             "image_url": {"url": f"data:{mime_type};base64,{image_data}"},
         }
+
+
+model_class = GoogleModel
+
+
+def get_provider_info():
+    """
+    Returns provider registration information.
+
+    Returns:
+        dict: Provider information with keys:
+            - name: Provider name
+            - model_class: The model implementation class
+            - model_prefix: Prefix for model names (if any)
+            - custom_models: List of custom models (if any)
+    """
+    return {
+        "name": provider_name,
+        "model_class": model_class,
+        "model_prefix": model_prefix,
+        "custom_models": provided_models,
+    }

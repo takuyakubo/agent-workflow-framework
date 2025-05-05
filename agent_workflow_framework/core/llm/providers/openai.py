@@ -3,11 +3,25 @@ OpenAI model implementation.
 """
 
 from langchain_openai import ChatOpenAI
+from openai import OpenAI
 
 from ..models import UnifiedModel
 from ..utils import image_path_to_image_data
 
 provider_name = "openai"
+model_prefix = "gpt-"
+
+
+def get_available_models():
+    client = OpenAI()
+    try:
+        data = client.models.list().data
+        return [d.id for d in data if d.object == "model"]
+    except:
+        return []
+
+
+provided_models = get_available_models()
 
 
 class OpenAIModel(ChatOpenAI, UnifiedModel):
@@ -47,3 +61,26 @@ class OpenAIModel(ChatOpenAI, UnifiedModel):
             "type": "image_url",
             "image_url": {"url": f"data:{mime_type};base64,{image_data}"},
         }
+
+
+model_class = OpenAIModel
+
+
+# プロバイダ登録情報を返す関数
+def get_provider_info():
+    """
+    Returns provider registration information.
+
+    Returns:
+        dict: Provider information with keys:
+            - name: Provider name
+            - model_class: The model implementation class
+            - model_prefix: Prefix for model names (if any)
+            - custom_models: List of custom models (if any)
+    """
+    return {
+        "name": provider_name,
+        "model_class": model_class,
+        "model_prefix": model_prefix,
+        "custom_models": provided_models,
+    }

@@ -1,7 +1,7 @@
 from typing import Dict, Type
 
 from .models import UnifiedModel
-from .providers import get_provider, model_registory
+from .providers import get_provider, model_registry
 
 
 class ModelFactory:
@@ -13,10 +13,12 @@ class ModelFactory:
     """
 
     # Registry of provider-specific model implementations
-    _registry: Dict[str, Type[UnifiedModel]] = model_registory
+    _registry: Dict[str, Type[UnifiedModel]] = model_registry
 
     @classmethod
-    def create(cls, model_name: str, **kwargs) -> UnifiedModel:
+    def create(
+        cls, model_name: str, provider_name: str = None, **kwargs
+    ) -> UnifiedModel:
         """
         Create a model instance for the specified model name.
 
@@ -30,7 +32,8 @@ class ModelFactory:
         Raises:
             ValueError: If the provider is not supported or not registered
         """
-        provider = get_provider(model_name)
+        provider = get_provider(model_name) if provider_name is None else provider_name
+
         if provider not in cls._registry:
             raise ValueError(
                 f"Provider '{provider}' is not registered. "
