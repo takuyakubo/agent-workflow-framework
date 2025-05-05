@@ -1,6 +1,7 @@
 import logging
 from typing import Callable, Generic, Tuple, TypeVar
 
+from langchain_core.tools.structured import StructuredTool
 from langgraph.graph import END
 
 from ...config import DEBUG_MODE
@@ -11,7 +12,7 @@ logger = logging.getLogger(__name__)
 T = TypeVar("T", bound="NodeState")
 
 
-class LangGraphNode(Generic[T]):
+class AgentNode(Generic[T]):
     name: str = "to be setup"
 
     def __init__(self, llm) -> None:
@@ -44,7 +45,7 @@ class LangGraphNode(Generic[T]):
 
 
 class LangGraphConditionalEdge:
-    def __init__(self, src: LangGraphNode, tgt: LangGraphNode):
+    def __init__(self, src: AgentNode, tgt: AgentNode):
         self.source = src
         self.target = tgt
 

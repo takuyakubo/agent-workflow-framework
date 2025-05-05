@@ -1,15 +1,15 @@
 from typing import List
 
-from core.graphs.elements import LangGraphConditionalEdge, LangGraphNode
+from core.graphs.elements import AgentNode, LangGraphConditionalEdge
 from langgraph.graph import END, START, StateGraph
 
 
 class SequentialWorkflow:
-    def __init__(self, nodes: List[LangGraphNode], init_state_cls) -> None:
+    def __init__(self, nodes: List[AgentNode], init_state_cls) -> None:
         self.workflow = StateGraph(init_state_cls)
         self.setup(nodes)
 
-    def setup(self, nodes: List[LangGraphNode]) -> None:
+    def setup(self, nodes: List[AgentNode]) -> None:
         nodes_with_sentinels = [START] + nodes + [END]
         edges = [
             LangGraphConditionalEdge(s, t)
