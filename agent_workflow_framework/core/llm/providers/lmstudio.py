@@ -4,7 +4,6 @@ OpenAI model implementation.
 
 import httpx
 from langchain_openai import ChatOpenAI
-from pydantic import Field
 
 from ....config import LMSTUDIO_HOST
 from ..models import UnifiedModel
