@@ -43,14 +43,6 @@ class GoogleModel(ChatGoogleGenerativeAI, UnifiedModel):
             **kwargs: Additional arguments for the model
         """
         super(ChatGoogleGenerativeAI, self).__init__(model=model_name, **kwargs)
-        self._model_name = model_name
-
-    @property
-    def model_name(self) -> str:
-        """
-        Returns the name of the underlying model.
-        """
-        return self._model_name
 
     @property
     def provider_name(self) -> str:

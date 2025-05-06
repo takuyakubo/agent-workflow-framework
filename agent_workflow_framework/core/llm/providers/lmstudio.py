@@ -4,6 +4,7 @@ OpenAI model implementation.
 
 import httpx
 from langchain_openai import ChatOpenAI
+from pydantic import Field
 
 from ....config import LMSTUDIO_HOST
 from ..models import UnifiedModel
@@ -43,14 +44,6 @@ class LMStudioModel(ChatOpenAI, UnifiedModel):
         super(ChatOpenAI, self).__init__(
             model=model_name, base_url=LMSTUDIO_HOST, api_key="dummy", **kwargs
         )
-        self._model_name = model_name
-
-    @property
-    def model_name(self) -> str:
-        """
-        Returns the name of the underlying model.
-        """
-        return self._model_name
 
     @property
     def provider_name(self) -> str:
