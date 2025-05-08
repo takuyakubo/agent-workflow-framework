@@ -38,5 +38,3 @@ Thumbs.db
 # jupyter files
 *.ipynb
 .ipynb_checkpoints/
-
-examples/
