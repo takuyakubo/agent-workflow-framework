@@ -1,7 +1,6 @@
 import logging
 from typing import Callable, Generic, Tuple, TypeVar
 
-from langchain_core.tools.structured import StructuredTool
 from langgraph.graph import END
 
 from ...config import DEBUG_MODE
